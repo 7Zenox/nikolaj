@@ -22,14 +22,3 @@ The basic heatmap (over chicago, with a basic timeframe), plotted using plotly.
 
 ![A prototype plot of the precinct zones.](assets/prototypeplot.jpg)
 A prototype plot of the precinct zones.
-
-## `WEBAPP IMPLEMENTATION`
-
-The Webapp implementation is extremely rudimentary and invovles a lot of workarounds for basic stuff we didn't have time to learn. To make the webapp work yourself, you will need to download all the dependencies (listed [here](requirements.txt)) and then run the following commands. (Everything is completely hard-coded for the webapp, sorry)
-
-```console
-user@root:~$ python -m http.server --directory "webapp/frontend" 8080
-user@root:~$ uvicorn webapp.backend.main:app
-```
-
-And then go to [localhost:8000](http://localhost:8000) to see it working.
