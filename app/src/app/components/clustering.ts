@@ -1,3 +1,4 @@
+// components/clustering.ts
 import { DataRow } from "../types";
 import { alphaShape } from "./alphaShape";
 import { kmeansGenerator } from "ml-kmeans";

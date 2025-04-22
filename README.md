@@ -17,10 +17,23 @@ As user input, our program requires the following:
 
 Most of this is handled with a friendly user interface. The main hurdle to cross now is the fact that the program is quite slow. Which, could be expected considering the amount of data that needs to be processed every time a new request is received, still needs optimization wherever possible nonetheless. And the fact that we need to find a proof of concept to actually chart the routes themselves that can be implemented. Some example screenshots are attached.
 
-## `SCREENSHOTS`
+## Algorithm Updates
 
-![The basic heatmap (over chicago, with a basic timeframe), plotted using plotly.](assets/heatmap.png)
-The basic heatmap (over chicago, with a basic timeframe), plotted using plotly.
+To address performance bottlenecks in silhouette‐score computation and keep the UI responsive, we’ve introduced the following enhancements:
 
-![A prototype plot of the precinct zones.](assets/prototypeplot.jpg)
-A prototype plot of the precinct zones.
+1. **Approximate Silhouette (O(n·k) time)**  
+   - Instead of the full O(n²) pairwise approach, each point’s silhouette **aᵢ** is computed as its distance to its **own centroid**, and **bᵢ** as its distance to the **nearest other centroid**.  
+   - This reduces the workload from quadratic in the number of points (n) to linear in n times the number of clusters (k).
+
+2. **Web Worker for Asynchronous Computation**  
+   - All silhouette calculations now run in a dedicated **Web Worker** (via a Blob URL), completely off the main thread.  
+   - The map and clustering traces render instantly, while the worker computes the score in the background.
+
+3. **Immediate Map Rendering + Spinner Badge**  
+   - We call `Plotly.newPlot(...)` as soon as the iframe loads, so the cluster map and secondary boundaries appear without delay.  
+   - A lightweight loading badge (spinner + “Computing score…”) is overlaid in the top‑left corner until the worker returns the final score.
+
+4. **Seamless UI Update**  
+   - Once the worker posts the computed silhouette value, the spinner badge text is replaced with **“Silhouette Score: X.XX”**, and the worker is terminated.
+
+These changes preserve interactivity, cut down “loading” perception to zero, and still deliver a meaningful cluster‐quality metric within milliseconds—even for thousands of data points.

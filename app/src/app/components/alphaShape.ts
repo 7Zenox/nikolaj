@@ -1,3 +1,4 @@
+// components/alphaShape.ts
 import { Delaunay } from "d3-delaunay";
 
 export function alphaShape(points: [number, number][], alpha: number, onlyOuter = true): [number, number][] {
